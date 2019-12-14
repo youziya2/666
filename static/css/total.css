@@ -1,0 +1,246 @@
+/* 去掉IE下的input清除框 */
+input::-ms-clear{
+  width: 0;
+  height: 0;
+}
+/* 文件选择框 */  
+.file-imgs{
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px dashed #dcdfe6;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+    background: url("./../../static/img/add.png") 50% no-repeat;
+    background-size: 50px;
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
+}
+  .file-imgs input{
+    cursor: pointer;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+/* 展示的图片 */
+.show-imgs {
+    width: 150px;
+    position: absolute;
+    top: 0;
+}
+.show-imgs img{
+    width: 100%;
+    height: 150px;
+    /* height: auto;
+    max-height: 180px; */
+}
+/* 图片删除 */
+.del-file-imgs{
+  font-size: 36px;
+  color: rgb(173, 58, 58);
+  font-weight: 700;
+  cursor: pointer;
+}
+/* 附件移除按钮 */
+.fil-btn-hover{
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
+  text-align: center;
+  z-index: 2019;
+  background-color: rgba(216, 210, 210, 0.4);
+}
+/* .fil-clear-icon{
+  font-size: 20px;
+} */
+
+
+/* 用户和产品模块输入框相关
+ */
+ .info-unit{
+   margin-bottom: 25px;
+ }
+ .grid-content {
+  display: inline-block;
+  vertical-align: middle;
+  width: 110px;
+  /* height: 40px;
+  line-height: 40px; */
+  overflow: hidden;
+}
+.discrible{
+  display:inline-block;
+  width:55%;
+  padding-left: 15px;
+  position:relative;
+  vertical-align: middle;
+}
+.must{
+  background: url('../../static/img/must.png') no-repeat center left;
+  background-size: 8px;
+}
+.enter-input {
+  width:100%;
+  font-size: inherit;
+  vertical-align: middle;
+  height: 40px;
+  line-height: 40px;
+  outline: 0;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+  background-color: rgb(248, 248, 248);
+  text-indent: 5px;
+  cursor: pointer;
+}
+.el-input__prefix {
+  display: none !important;
+}
+.enter-textare:focus,
+.enter-input:focus {
+  border-color: rgba(82, 168, 236, 0.8);
+  outline: 0;
+  outline: thin dotted \9;
+  -webkit-box-shadow: inset 0 1px 1px rgba(187, 97, 97, 0.075),
+    0 0 8px rgba(67, 119, 238, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(187, 97, 97, 0.075),
+    0 0 8px rgba(67, 119, 238, 0.6);
+  box-shadow: inset 0 1px 1px rgba(187, 97, 97, 0.075),
+    0 0 8px rgba(67, 119, 238, 0.6);
+}
+.enter-textare {
+  padding: 0 5px;
+  line-height: 30px;
+  font-size: inherit;
+  outline: 0;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+  background-color: rgb(248, 248, 248);
+  text-indent: 5px;
+  cursor: pointer;
+}
+.el-col {
+  padding: 0px !important;
+}
+.units{
+  position: absolute;
+  font-size: 14px;
+  color: #999;
+  right: 10px;
+  top: 11px;
+}
+
+
+/* 桌面管理和应用管理录入修改部分样式 */
+.demo-textatea-suffix{
+  display: inline-block;
+  vertical-align: top;
+  width: 100%;
+  margin-bottom: 80px;
+}
+.demo-textatea-title{
+  display: inline-block;
+  width: 9%;
+  vertical-align: top;
+  margin-right: 15px;
+}
+
+
+
+
+.xz-content {
+  /* min-width: 1000px; */
+  background-color: #ffffff;
+  padding: 50px;
+  padding-bottom: 0px;
+  height: 190px;
+}
+.title {
+  font-size: 20px;
+  font-weight: 600;
+}
+.elinput {
+  margin-right: 15% !important;
+  width: 55% !important;
+}
+.input {
+  /* line-height: 40px; */
+  padding: 20px 30px;
+  width: 98%;
+  overflow: hidden;
+}
+.el-textarea {
+  width: 60%;
+}
+.btm-content-btm {
+  padding: 50px;
+  padding-top: 0px;
+  padding-bottom: 20px;
+  background-color: #ffffff;
+}
+.upload {
+  overflow: hidden;
+  padding: 20px 30px;
+}
+.el-upload {
+  margin-top: 30px;
+  margin-right: 20px;
+}
+.enteringimgupload > div {
+  display: inline-block;
+  margin-bottom: 25px;
+  margin-right: 20px;
+}
+.entering-uploadshuoming {
+  width: 148px;
+  text-align: center;
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+  line-height: 14px;
+}
+.el-upload {
+  margin-top: 30px;
+  margin-right: 20px;
+}
+.el-upload-list {
+  display: none;
+}
+
+
+/* d底部显示删除按钮 */
+.show-delet-btn{
+  width: 100px;
+  height: 36px;
+  line-height: 10px;
+  color: #ffffff;
+  background-color:#962424; 
+  position: absolute;
+  bottom: -45px;
+  left: 0px;
+  z-index: 999;
+}
+.show-delet-btn:hover{
+  background-color: red;
+  color: #ffffff;
+}
+
+/* 查询内容为空 */
+.content-null{
+  text-align: center;
+  line-height: 350px;
+}
+
+.txt-hidden{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

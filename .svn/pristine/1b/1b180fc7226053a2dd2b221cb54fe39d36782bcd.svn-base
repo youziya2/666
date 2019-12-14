@@ -1,0 +1,25 @@
+'use strict'
+const merge = require('webpack-merge')
+const prodEnv = require('./prod.env')
+
+let params = process.argv[4]
+let baseUrl = ''
+let baseImgURL = ''
+switch (params) {
+    case '--env=test':
+      baseUrl = '"http://screenbehind"'
+      baseImgURL = '"http://screenbehind"'
+      break
+    case '--env=prod':
+      baseUrl = '"http://screen.honglingview.com"'
+      baseImgURL = '"http://yokingmanage.honglingview.com/"'
+      break
+    default:
+      baseUrl = '"http://screenbehind"'
+      baseImgURL = '"http://192.168.3.8/yokingManage"'
+}
+module.exports = merge(prodEnv, {
+  NODE_ENV: '"development"',
+  baseUrl: baseUrl,
+  baseImgURL: baseImgURL
+})

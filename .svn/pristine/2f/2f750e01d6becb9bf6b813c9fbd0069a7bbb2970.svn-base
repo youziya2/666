@@ -1,0 +1,24 @@
+'use strict'
+
+let params = process.argv[2]
+let baseUrl = ''
+let baseImgURL = ''
+switch (params) {
+    case 'test':
+      baseUrl = '"http://screenbehind"'
+      baseImgURL = '"http://screenbehind"'
+      break
+    case 'prod':
+      baseUrl = '"http://screen.honglingview.com"'
+      baseImgURL = '"http://yokingmanage.honglingview.com/"'
+      break
+    default:
+      baseUrl = '"http://screenbehind"'
+      baseImgURL = '"http://192.168.3.8/yokingManage"'
+}
+
+module.exports = {
+  NODE_ENV: '"production"',
+  baseUrl: baseUrl,
+  baseImgURL: baseImgURL
+}

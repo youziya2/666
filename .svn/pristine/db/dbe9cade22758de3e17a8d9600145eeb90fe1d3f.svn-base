@@ -1,0 +1,203 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>hongling</title><link href=./static/css/app.38bebfa827ed987d724c3275374a942b.css rel=stylesheet></head><body style=overflow:hidden scroll=no><div id=app></div><script type=text/javascript src=./static/js/manifest.713a89ddce98ba292e5e.js></script><script type=text/javascript src=./static/js/vendor.7f01fe3d1e8bc6e7b61f.js></script><script type=text/javascript src=./static/js/app.cd84b6e733b4837e1096.js></script></body><script src=./static/js/md5.js defer=defer></script><style>* {
+        padding: 0px;
+        margin: 0px;
+    }
+    ul li{
+        list-style: none;
+    }
+    body{
+        overflow:scroll;
+        overflow-x:hidden;
+        background-color: #F1F4F6;
+    }
+    /* 头部组件 */
+    .header{
+        width: 98%;
+        min-width: 800px;
+        height: 60px;
+        padding-left: 30px;
+    }
+    .header li{
+        display: inline-block;
+        padding: 0px 15px;
+        height: 45px;
+        font-size: 14px;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius:5px 5px 0px 0px;
+        margin-top: 15px;
+        line-height: 50px;
+        margin-left: 10px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 14%;
+        position: relative;
+    }
+    .header li:hover:not(.router-link-active){
+        background:rgba(255, 255, 255,0.4);
+    }
+    .header li:hover{
+        cursor: pointer;
+    }
+    .header li i{
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    .header .router-link-active{
+        background-color: #ffffff;
+    }
+    /* 更多页面 */
+    .header .more{
+        margin-bottom: 12px;
+        width: 18px;
+        height: 16px;
+        margin-left: 20px;
+    }
+    .gmore{
+        padding: 0px !important;
+        z-index: 999999 !important;
+    }
+    .gmore .moreroute{
+        display: block;
+        color: #666;
+        padding: 20px;
+        width: 160px;
+        border-bottom: 1px solid #E4E4E4;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .close{
+        width: 10px;
+        height: 10px;
+        border-radius: 50%; 
+        position: absolute;
+        top: 40%;
+        right: 4%;
+    }
+    .close:hover{
+        background-color: #999;
+    }
+    .separate{
+        width: 100%;
+        height: 70px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 28px rgba(153,153,153,0.4);
+    }
+    /* 头部组件结束 */
+    .content{
+        padding: 0px 20px;
+        margin-top: 170px;
+    }
+    /* 面包屑组件 */
+    .breadcrumb div{
+        height: 40px;
+        line-height: 40px;
+        cursor: default;
+    }
+    .one span{
+        background-color: black;
+        padding: 0px 4px;
+        border-radius: 4px;
+        color: #fff !important;
+    }
+    .end span{
+        color: black !important;
+        cursor: pointer !important;
+    }
+    /* 面包屑组件结束 */
+    .btn-group{
+        float: right;
+        margin-top:80px; 
+        padding: 0px;
+    }
+    .btn-group button{
+        width: 178px;
+        height: 48px;
+    }
+    /* input组 */
+    .el-row{
+        margin-bottom: 24px;
+    }
+    .elinput{
+        margin-right:21%; 
+        float: right;
+        width: 52%;
+    }
+    /* 分割线 */
+    .cut{
+        line-height: 30px;
+        width: 100%;
+        height: 1px;
+        margin-bottom: 45px;
+        background-color: #CCCCCC;
+        box-shadow: 0px 4px 28px rgba(153,153,153,0.4);
+    }
+    /* input框背景色 */
+    .el-input__inner,.el-textarea__inner{
+        background-color: #F8F8F8;
+    }
+    /* 白色背景色 */
+    .backgroundfff{
+        width: 100%;
+        height: 100%;
+        background-color: #ffffff;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: -999;
+    }
+    /* 内容滚动块去掉横向滚动条 */
+    .el-scrollbar__wrap{
+        overflow-x: hidden;
+    }
+    .el-select-dropdown__wrap.el-scrollbar__wrap{
+        overflow-x: scroll;
+    }
+    /* 白色背景路由样式 */
+    .separate li{
+        list-style: none;
+        cursor: pointer;
+        padding: 0px 15px;
+        height: 40px;
+        float: left;
+        line-height: 40px;
+        border-radius: 5px;
+        margin-top: 15px; 
+        color: #343844;
+        font-size: 14px;
+        margin-right: 25px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 7%;
+    }
+    .separate i{
+        margin-right: 10px;
+        font-size: 16px;
+        vertical-align: middle;
+    }
+    .separate{
+        padding-left: 40px;
+    }
+    .item{
+        z-index: 9999999999 !important;
+    }
+    .inputTitle{
+        font-size: 12px;
+        color: #999;
+        line-height: 32px;
+        margin-left: 24%;
+    }
+    .childmore{
+        margin-top: 25px;
+        width: 18px;
+        margin-left: 20px;
+    }
+    .el-scrollbar__bar{
+        right: -10px;
+    }</style></html>
