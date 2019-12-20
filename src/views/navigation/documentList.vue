@@ -17,31 +17,37 @@ export default {
         tit02: '文件列表',
         tit03: '输入关键字搜索',
         tit04: '图片资源',
-        tit05: '视频资源',
-        tit06: '文档资源',
-        tit07: '音乐资源',
-        tit08: '其他资源',
-        tit09: '请上传符合要求的文件',
-        tit10: '文件管理',
-        tit11: '下载选中',
-        tit12: '删除选中'
+        tit05: '动画资源',
+        tit06: '视频资源',
+        tit07: '文档资源',
+        tit08: '音乐资源',
+        tit09: '其他资源',
+        tit10: '请上传符合要求的文件',
+        tit11: '文件管理',
+        tit12: '下载选中',
+        tit13: '删除选中'
       },
       // 文件类型
       fileType: {
-        image: "bmp,png,gif,jpg,jpeg",
+        image: "bmp,png,jpg,jpeg",
+        anim: "gif",
         video: "mp4,rmvb,avi,ts,mvb,flv",
         doc: "txt,doc,xls,ppt,docx,xlsx,pptx",
         music: "wma,mp3",
         others: 'zip',
       },
       list: [
-        {
-          name: "广告控制",
-          route: "/management/documentList/uploadDocumentList"
-        },
+        // {
+        //   name: "广告控制",
+        //   route: "/management/documentList/uploadDocumentList"
+        // },
         {
           name: "图片资源",
           route: "/management/documentList/documentListsFenlei/image"
+        },
+        {
+          name: "动画资源",
+          route: "/management/documentList/documentListsFenlei/anim"
         },
         {
           name: "视频资源",
@@ -65,11 +71,12 @@ export default {
   },
   created(){
     this.docObj = getName('attach',this.docObj);
+    console.log(this.docObj)
     for (let index = 0; index < this.list.length; index++) {
       if (index == 0) {
-        this.list[index].name = this.docObj.tit01;
+        this.list[index].name = this.docObj.tit04;
       } else {
-        this.list[index].name = this.docObj['tit0' + (index + 3)];
+        // this.list[index].name = this.docObj['tit0' + (index + 4)];
       }     
     }
   },

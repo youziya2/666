@@ -69,7 +69,7 @@
                                 @change="getChoice(totalChoice,index,item.listCheck,item.atid + '@@' + baseUrl + item.aturl)"
                                 v-model="item.listCheck" v-show="productActive === index||item.listCheck"></el-checkbox>
                             <div class="docImg">
-                                <img :src="item.atcname | fileType($parent.fileType)" :title='item.atcname'>
+                                <img :src="item.aturl | fileType($parent.fileType)" :title='item.atcname'>
                                 <!-- {{'http://screenbehind'+item.aturl}} -->
                             </div>
                             <div class="triangle" @click="paly(index)" v-show="item.states == 0"></div>
@@ -123,6 +123,7 @@
     import { getChoice, doChoice, getScct, setScct, clearScct} from "./../../api/methods.js";
     import { batchDelete, getFiles, delPictrue, uploadMoreattach, getGoodsitemByCustid, getAdverTising, Period} from "./../../api/https.js";
     import child from "./../../components/page.vue";
+    import fetch from './../../api/axios'
     export default {
         data() {
             return {
@@ -167,14 +168,15 @@
         },
         filters: {
             fileType: function (val, obj) {
+                // console.log(fetch.baseURL)
                 var type = val.substring(val.lastIndexOf('.') + 1).toLowerCase(), urls = './static/img/doczip.png';
                 if (obj.image.indexOf(type) > -1)//图片
-                    urls = "./static/img/docimg.png";
+                    urls = fetch.baseURL+val;
                 if (obj.video.indexOf(type) > -1)//视频
                     urls = "./static/img/video.png";
                 if (obj.doc.indexOf(type) > -1)//文档
                     urls = "./static/img/docword.png";
-                if (obj.music.indexOf(type) > -1)//音频
+                if (obj.music.indexOf(type) > -1)//音频     
                     urls = "./static/img/audio.png";
                 return urls
             },

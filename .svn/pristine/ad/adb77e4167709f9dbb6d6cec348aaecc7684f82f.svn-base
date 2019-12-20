@@ -1,0 +1,738 @@
+<template>
+    <div>
+        <div class="doc-btn-group" v-if="deletshow">
+            <el-row>
+                <!-- 下载选中 -->
+                <el-button :style="{backgroundColor:colorselects,color:'#fff'}" @click.native="allDownload()">
+                    {{$parent.docObj.tit11}}</el-button>
+                <!-- 删除选中 -->
+                <el-button type="danger" @click.native="doChoice(totalChoice,'totalChecked',2)">{{$parent.docObj.tit12}}
+                </el-button>
+            </el-row>
+        </div>
+        <div class="docSearch">
+            <el-input :placeholder="$parent.docObj.tit03" class="input-with-select" v-model="scct">
+                <el-button slot="append" icon="el-icon-search" :style="{backgroundColor:colorselects}"
+                    @click.native="doSearch()"></el-button>
+            </el-input>
+        </div>
+        <!-- 删除提示 -->
+        <el-dialog :title="$promptObj.warn" :visible.sync="centerDialogVisible" width="330px" center>
+            <!-- <span v-if="flag == 1">是否删除文件？</span>
+            <span v-if="flag == 2">删除的文件个数：{{selectNum}}</span> -->
+            <span>{{$promptObj.delwarn}}</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">{{$buttonObj.cancel}}</el-button>
+                <template v-if="flag == 1">
+                    <el-button type="primary" @click="delPictrue">{{$buttonObj.sure}}</el-button>
+                </template>
+                <template v-if="flag == 2">
+                    <el-button type="primary" @click="allDelect">{{$buttonObj.sure}}</el-button>
+                </template>
+            </span>
+        </el-dialog>
+        <the-breadcrumb :end="end" :list="list" :endgoto="endgoto" @initData='initData'></the-breadcrumb>
+        <div class="documentContent">
+            <el-scrollbar style="width:100%;overflow-x: hidden;" :style="{height:windowHeight}">
+                <div style="margin-bottom: 30px;">
+                </div>
+                <div class="check">
+                    <!-- 全选 -->
+                    <el-checkbox v-model="allCheck" v-if='product.length > 0' @change="allChoice">
+                        {{$buttonObj.allCheck}}</el-checkbox>
+                    <p style="color: red;margin: -20px -20px 20px 112px;" v-show="this.$route.params.id === 'image'">
+                        温馨提示：上传文件只支持bmp,png,jpg,jpeg格式！
+                    </p>
+                    <p style="color: red;margin: -20px -20px 20px 112px;" v-show="this.$route.params.id === 'anim'">
+                        温馨提示：上传文件只支持gif格式！
+                    </p>
+                    <p style="color: red;margin: -20px -20px 20px 112px;" v-show="this.$route.params.id === 'video'">
+                        温馨提示：上传文件只支持mp4,rmvb,avi,ts,mvb,flv格式！
+                    </p>
+                </div>
+
+                <el-row :gutter="20">
+                    <!-- 文件上传 -->
+                    <el-col :span="4">
+                        <div class="documentShangchuan">
+                            <form enctype="multipart/form-data" class="uploadForm" style="position: relative;">
+                                <div class="file-imgs">
+                                    <input type="file" ref="img01" id="img01" :title="$buttonObj.clickFile" name="img01"
+                                        multiple="multiple"
+                                        @change="uploadMoreattach($event,getImgInfoCb,'img01','atid')">
+                                    <div class="show-imgs">
+                                        <img v-if=" imgList.img01.imgpath " :src="imgList.img01.imgpath">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </el-col>
+                    <!-- 文件列表 -->
+                    <!-- 暂无数据 -->
+                    <div v-if='product.length < 1' class="content-null" style="clear: both"> {{$buttonObj.noData}}
+                    </div>
+                    <el-col :span="4" v-for="(item,index) in product" :key="index">
+                        <div class="documentLists" :class="item.listCheck?'documentListsActive':''"
+                            @mouseenter="productActive = index" @mouseleave="productActive = ''">
+                            <el-checkbox name="checkcolor"
+                                @change="getChoice(totalChoice,index,item.listCheck,item.atid + '@@' + baseUrl + item.aturl)"
+                                v-model="item.listCheck" v-show="productActive === index||item.listCheck"></el-checkbox>
+                            <div class="docImg">
+                                <img :src="fileImg[fileType] === './static/img/docimg.png' ? baseURL + item.aturl : fileImg[fileType]"
+                                    :title="item.atcname">
+                                <!-- {{'http://screenbehind'+item.aturl}} -->
+                            </div>
+                            <div class="triangle" @click="paly(index)" v-show="item.states == 0"></div>
+                            <div class="rectangle" @click="pause(index)" v-show="item.states == 1"></div>
+                            <div class="docTitle">{{ item.atcname | capitalize }}</div>
+                            <div class="uplodownlo">
+                                <span @click="advert(item.atid,index)"><img src="./../../../static/img/bangding.png"
+                                        style="float:left; margin-top:1px;" v-show="productActive === index"></span>
+                                <el-dialog title="" :visible.sync="dialogVisible" width="480px"
+                                    :before-close="handleClose">
+                                    <div style="border: black solid 1px; padding: 20px;">
+                                        <div style="text-align: left;height: 62px; margin-bottom: 10px;"
+                                            v-for="(item,index) in productList" :key="index">
+                                            <div style="float: left;line-height: 62px;">
+                                                <el-checkbox style="position: static;"
+                                                    @change="getChoices(item.isckd,item.mac,index)" :checked=item.isckd
+                                                    v-model="item.isckd" class="checkbox" :val=item.mac></el-checkbox>
+                                            </div>
+                                            <div style="margin-left: 20px;float: left;width: 80px;"><img
+                                                    src="./../../../static/img/television.png"
+                                                    style="width: 80%;height:62px;"></div>
+                                            <div style="float: left;line-height: 62px;">MAC:{{item.mac}}</div>
+                                        </div>
+                                    </div>
+                                    <span slot="footer" class="dialog-footer">
+                                        <el-button type="primary" @click="confirm()">确 定</el-button>
+                                    </span>
+                                </el-dialog>
+                                <span @click="downLoad(baseUrl + item.aturl)"><img
+                                        src="./../../../static/img/downloaddoc.png"
+                                        v-show="productActive === index"></span>
+                                <span style="float:right" v-show="productActive === index && !item.listCheck"
+                                    @click="isDelect(1,'img01',item.atid)"><img
+                                        src="./../../../static/img/deletdoc.png"></span>
+                            </div>
+                        </div>
+                    </el-col>
+                </el-row>
+                <!--分页-->
+                <child @current='getCurrent'></child>
+            </el-scrollbar>
+        </div>
+    </div>
+</template>
+
+<script>
+    import child from "./../../components/page.vue";
+    import { getChoice, doChoice, getScct, setScct, clearScct } from "./../../api/methods.js";
+    import { batchDelete, getFiles, delPictrue, uploadMoreattach, getAdverTising, getGoodsitemByCustid, Period } from "./../../api/https.js";
+    import fetch from './../../api/axios'
+    export default {
+        data() {
+            return {
+                list: [
+                    { router: this.$parent.docObj.tit10 }
+                ],
+                end: this.$parent.docObj.tit02,
+                endgoto: '',
+                allCheck: '',//全选
+                totalChoice: [],//点击数组
+                totalChecked: [],//选择数组
+                imgList: {//图片列表
+                    img01: { imgid: '', imgpath: '' }
+                },
+                imgNum: '',//附件ID
+                productActive: '',
+                deletshow: false,
+                windowHeight: '',
+                centerDialogVisible: false,
+                windowHeight: '',
+                fileType: 'image',
+                fileImg: {//图标
+                    'image': './static/img/docimg.png',
+                    'anim': './static/img/docimg.png',
+                    'video': './static/img/video.png',
+                    'doc': './static/img/docword.png',
+                    'music': './static/img/audio.png',
+                    'others': './static/img/doczip.png',
+                },
+                flag: 1,
+                scct: '',//搜索内容
+                thisPage: 1, //当前页码
+                perPage: 23, //每页记录数
+                sumRecord: 1,// 总纪录条数(默认1是让图标刚开始能加载选择的主题颜色)
+                product: [],
+                productList: "",
+                dialogVisible: false,
+                baseURL: fetch.baseURL
+            }
+        },
+        components: {
+            child
+        },
+        created() {
+            this.load();
+            window.addEventListener('resize', this.getHeight);
+            this.getHeight();
+            this.getData();
+            this.getGoodsitemByCustid();
+        },
+        filters: {
+            capitalize: function (value) {
+                var str = ''
+                if (value.length > 22) str = value.substring(0, 7) + '……' + value.substring(value.length - 9)
+                else str = value
+                return str
+            }
+        },
+        computed: {
+            colorselects() {
+                return this.$route.matched[0].meta.colorselect;
+            }
+        },
+        methods: {
+            //弹框
+            handleClose(done) {
+                this.dialogVisible = false
+            },
+            //点击播放
+            paly(index) {
+                var obj = {
+                    self: this,
+                    success: response => {
+                        if (response.data.message.indexOf("getSuccess") > -1) {
+                            var rdg = response.data.attachList, obj = {}
+                            this.product = []
+                            for (let index = 0; index < rdg.length; index++) {
+                                obj = rdg[index].fieldvalues
+                                obj.listCheck = false
+                                this.product.push(obj)
+                            }
+                            this.$bus.emit('doPage', response.data.page.sumRecord, this.perPage, this.thisPage)
+                            this.totalChoice = [];//点击数组
+                            this.totalChecked = [];//选择数组
+                            this.getData()
+                        } else {
+                            this.$message.error(this.$promptObj.savefail)
+                        }
+                    }
+                }
+                this.product[index].states = '1'
+                var states = this.product[index].states
+                Period(obj, index, states);
+                // var boo = this.macs
+                // console.log(obj,index,boo)
+                // getAdverTising(obj,index,boo)
+            },
+            //点击暂停
+            pause(index) {
+                var obj = {
+                    self: this,
+                    success: response => {
+                        if (response.data.message.indexOf("getSuccess") > -1) {
+                            var rdg = response.data.attachList, obj = {}
+                            this.product = []
+                            for (let index = 0; index < rdg.length; index++) {
+                                obj = rdg[index].fieldvalues
+                                obj.listCheck = false
+                                this.product.push(obj)
+                            }
+                            this.$bus.emit('doPage', response.data.page.sumRecord, this.perPage, this.thisPage)
+                            this.totalChoice = [];//点击数组
+                            this.totalChecked = [];//选择数组
+                            this.getData()
+                        } else {
+                            this.$message.error(this.$promptObj.savefail)
+                        }
+                    }
+                }
+                this.product[index].states = '0'
+                var states = this.product[index].states
+                Period(obj, index, states);
+            },
+            // 获取页面组件传过来的值
+            getCurrent(data) {
+                this.thisPage = data;
+                this.getData();
+            },
+            //获取导航列表传过来的值
+            initData() {
+                this.thisPage = 1
+                this.scct = ''
+                clearScct(this.fileType)
+                this.getData()
+            },
+            getHeight() {
+                this.windowHeight = this.$config.getHeight(200);
+            },
+            // 附件上传
+            uploadMoreattach(ev, fnCallBack, str, pkid) {
+                var oFile = ev.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var oImg = new Image();
+                    oImg.src = this.result;
+                    document.body.appendChild(oImg);
+                    oImg.onload = function () {
+                        var imgWidth = oImg.offsetWidth;
+                        var imgHeight = oImg.offsetHeight;
+                        fnCallBack && fnCallBack({
+                            width: imgWidth,
+                            height: imgHeight
+                        })
+                        document.body.removeChild(oImg);
+                    };
+                };
+                reader.readAsDataURL(oFile);
+                // console.log(this.getImgInfoCb(json))
+                // if(this.width!=500){
+                //     this.$message({
+                //     message: '上传文件分辨率不对！',
+                //     type: 'error'
+                //     });
+                //     return false
+                // }
+                // alert('可以传图')
+                var uploadFile = this.$refs.img01.value, types = this.$parent.fileType[this.fileType];
+                var subtypes = this.fileType;
+                if (types.indexOf(uploadFile.substring(uploadFile.lastIndexOf('.') + 1)) < 0) {
+                    this.$refs.img01.value = '';
+                    return this.$message.error(this.$parent.docObj.tit09)
+                }
+                var obj = {
+                    isAttach: 'attach',
+                    types: 'ad',
+                    tbname: "attach",
+                    imgIndex: this.imgList[str],
+                    dom: document.getElementById(str),
+                    pkid: pkid,
+                    subtypes: subtypes,
+                    fn: this.getData
+                }
+                this.scct = '';
+                uploadMoreattach(obj)
+            },
+            getImgInfoCb(json) {
+                console.log(json)
+                console.log(`width:${json.width} , height:${json.height}`);
+            },
+            //点击全选
+            allChoice() {
+                this.product.forEach(element => {
+                    if (this.allCheck) {
+                        element.listCheck = true;
+                        this.totalChoice.push(element.atid);
+                    } else {
+                        element.listCheck = false;
+                        this.totalChoice = [];
+                    }
+                });
+            },
+            // 获取搜索条件
+            getScct() {
+                var obj = {
+                    scct: ''
+                }
+                this.thisPage = 1
+                getScct(this.fileType, obj, this)
+            },
+            // 记录搜索条件
+            setScct() {
+                var obj = {
+                    scct: this.scct
+                }
+                setScct(this.fileType, obj)
+            },
+            // 点击搜索
+            doSearch() {
+                this.setScct();
+                this.thisPage = 1;
+                this.getData(true);
+            },
+            // 点击激活按钮
+            getChoice(arr, num, boo, id) {
+                getChoice(arr, num, boo, id)
+            },
+            // 删除附件提示（单个）
+            isDelect(num, item, fileId) {
+                this.centerDialogVisible = true;
+                this.flag = num
+                this.imgNum = item;
+                this.imgList.img01.imgid = fileId;
+            },
+            // 移除单个附件
+            delPictrue() {
+                this.thisPage = 1;
+                delPictrue(this, 'fil', 'getData')
+            },
+            // 点击批量删除提示
+            doChoice(arr1, arr2, num) {
+                this.centerDialogVisible = true;
+                this.flag = num;
+                this[arr2] = doChoice(arr1, arr2)
+                this[arr2] = this.splitArr(this[arr2], 0)
+                this.selectNum = this[arr2].length
+                this.$bus.emit('deleteArr', this[arr2], 'atid')
+            },
+            //批量删除 
+            allDelect() {
+                var obj = {
+                    success: res => {  //res是server端响应
+                        var res = JSON.parse(res)
+                        if (res.message.indexOf("removeSuccess") > -1) {
+                            this.$message.success(this.$promptObj.removesuccess);
+                            this.centerDialogVisible = false;
+                            this.getData()
+                        } else {
+                            this.$message.error(this.$promptObj.removefail);
+                        }
+                    }
+                }
+                batchDelete('BHAttachServiceInfc.batchRemoveAttach', 'attach', obj)
+            },
+            //点击获取mac地址
+
+            getChoices(isckd, mac, index) {
+                console.log(this.productList)
+                // if(isckd) {
+                //     this.macs.push(this.productList[index].mac);                                                                                         
+                // } else{
+                //     this.macs.splice(this.productList[index].mac,1); 
+                // }
+            },
+            // 截取@@分割数组
+            splitArr(arr, index) {
+                var arr1 = [], arr2 = [];
+                for (let i = 0; i < arr.length; i++) {
+                    arr1 = arr[i].split('@@');
+                    arr2.push(arr1[index])
+                }
+                return arr2
+            },
+            // 多个下载
+            allDownload() {
+                this.totalChecked = doChoice(this.totalChoice, 'totalChecked')
+                this.totalChecked = this.splitArr(this.totalChecked, 1)
+                for (let index = 0; index < this.totalChecked.length; index++) {
+                    this.downLoad(this.totalChecked[index]);
+                }
+            },
+            load() {
+                let i = this.$route.params.id;
+                console.log(i)
+                if (i === 'video') {
+                    this.fileType = 'video'
+                } else if (i === 'image') {
+                    this.fileType = 'image'
+                } else if (i === 'anim') {
+                    this.fileType = 'anim'
+                } else if (i === 'music') {
+                    this.fileType = 'music'
+                } else if (i === 'doc') {
+                    this.fileType = 'doc'
+                } else if (i === 'others') {
+                    this.fileType = 'others'
+                } else {
+                    this.fileType = ''
+                }
+                this.scct = '';
+                this.getScct();
+                this.getData()
+            },
+            //机器绑定投放广告资源接口
+            advert(atid, index) {
+
+                console.log(index);
+                console.log("1=" + atid);
+                var obj = {
+                    success: res => {
+                        if (res.data.message.indexOf("getSuccess") > -1) {
+                            var array = res.data.data;
+                            this.productList = [];
+                            for (let index = 0; index < array.length; index++) {
+                                if (!array[index].goodsppt) {
+                                    array[index].goodsppt = JSON.parse(JSON.stringify(this.goodsppt))
+                                }
+                                this.productList.push(array[index]);
+                            }
+                        } else {
+                            this.$message.error(this.$promptObj.searchfail);
+                        }
+                    }
+                }
+
+
+                console.log("2=" + atid);
+                getGoodsitemByCustid(obj, atid)
+                this.index = index;
+                this.atids = atid;
+                this.dialogVisible = true
+            },
+            //获取公司全部会议机
+            getGoodsitemByCustid() {
+            },
+            //点击确定
+            confirm() {
+                this.dialogVisible = false
+                var obj = {
+                    self: this,
+                    success: response => {
+                        if (response.data.message.indexOf("getSuccess") > -1) {
+                            var rdg = response.data.attachList, obj = {}
+                            this.product = []
+                            for (let index = 0; index < rdg.length; index++) {
+                                obj = rdg[index].fieldvalues;
+                                obj.listCheck = false;
+                                this.product.push(obj);
+                            }
+                            this.$bus.emit('doPage', response.data.page.sumRecord, this.perPage, this.thisPage)
+                            this.totalChoice = [];//点击数组
+                            this.totalChecked = [];//选择数组
+                            this.getData()
+                        } else {
+                            this.$message.error(this.$promptObj.savefail)
+                        }
+                    }
+                }
+                var index = this.index
+                var boo = this.macs
+                var subatid = this.atids;
+
+                getAdverTising(obj, index, this.productList)
+                getFiles(obj);
+                console.log(this.productList)
+            },
+            // 获取数据
+            getData() {
+                var obj = {
+                    self: this,
+                    success: response => {
+                        if (response.data.message.indexOf("getSuccess") > -1) {
+                            var rdg = response.data.attachList, obj = {}
+                            this.product = []
+                            for (let index = 0; index < rdg.length; index++) {
+                                obj = rdg[index].fieldvalues
+                                obj.listCheck = false
+                                this.product.push(obj)
+                            }
+                            console.log(this.product)
+                            this.$bus.emit('doPage', response.data.page.sumRecord, this.perPage, this.thisPage)
+                            this.totalChoice = [];//点击数组
+                            this.totalChecked = [];//选择数组
+                        } else {
+                            this.sumRecord = this.product.length
+                            this.$message.error(this.$promptObj.searchfail);
+                        }
+                    }
+                }
+                getFiles(obj)
+            },
+        },
+        watch: {
+            product: {
+                deep: true,
+                handler: function (n) {
+                    this.deletshow = false;
+                    this.allCheck = true;
+                    n.forEach(e => {
+                        e.listCheck ? this.deletshow = true : '';
+                        e.listCheck ? '' : this.allCheck = false;
+                    });
+                }
+            },
+            "$route": "load"
+        }
+    }
+</script>
+
+<style scoped>
+    .el-row {
+        height: 40px !important;
+    }
+
+    .documentContent {
+        background-color: #fff;
+        padding: 10px 50px 0px;
+    }
+
+    .doc-btn-group {
+        position: fixed;
+        overflow: hidden;
+        left: 220px;
+        top: 80px;
+        z-index: 999;
+    }
+
+    .doc-btn-group button {
+        width: 100px;
+        height: 36px;
+        line-height: 10px;
+    }
+
+    .documentContent .el-pagination {
+        text-align: center;
+        margin: 40px 0px;
+    }
+
+    .documentContent .el-col {
+        text-align: center;
+        padding: 0px 10px 10px 0px !important;
+    }
+
+    .documentContent .el-row {
+        min-height: 600px;
+    }
+
+    .documentLists {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 30px 20px;
+        position: relative;
+        padding-bottom: 0px;
+        cursor: default;
+    }
+
+    .documentLists img {
+        cursor: pointer;
+    }
+
+    .documentLists:hover:not(.documentListsActive) {
+        background-color: #F1F4F6;
+    }
+
+    .docImg {
+        position: relative;
+        width: 55%;
+        height: 125px;
+        text-align: center;
+        margin: 0px auto;
+    }
+
+    .docImg img {
+        width: 90%;
+        height: 80%;
+    }
+
+    .docTitle {
+        font-size: 14px;
+        color: #666;
+        line-height: 22px;
+        height: 44px;
+        overflow: hidden;
+    }
+
+    .documentShangchuan .el-upload {
+        width: 120px !important;
+        height: 120px;
+        line-height: 120px;
+    }
+
+    .documentShangchuan {
+        margin-top: 20px;
+    }
+
+    .documentLists .el-checkbox {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    .documentListsActive {
+        background-color: #E4E4E4;
+    }
+
+    .uplodownlo {
+        margin: 0px auto;
+        margin-top: 10px;
+        padding-bottom: 18px;
+        overflow: hidden;
+        min-height: 40px;
+        width: 74%;
+    }
+
+    .uplodownlo img {
+        width: 20px;
+    }
+
+    .docSearch {
+        position: fixed;
+        top: 80px;
+        right: 40px;
+        z-index: 999;
+    }
+
+    .docSearch,
+    .filtrate {
+        color: #333;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .docSearch>div {
+        width: 400px;
+        margin-left: 40px;
+    }
+
+    .docSearch>div .el-input__inner {
+        height: 36px;
+    }
+
+    .docSearch .el-input-group__append {
+        width: 19px;
+        left: 20px;
+    }
+
+    .docSearch .el-input-group__append button {
+        height: 40px;
+        padding-top: 9px;
+        /* padding-bottom: 10px; */
+    }
+
+    .docSearch .el-input-group__append i {
+        font-size: 20px;
+        ;
+        color: #fff;
+    }
+
+    .docSearch ::-webkit-input-placeholder {
+        /* WebKit browsers */
+        color: #999;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .triangle {
+        cursor: pointer;
+        transform: rotate(45deg);
+        -webkit-transform: rotate(90deg);
+        border-left: 23px solid transparent;
+        border-right: 23px solid transparent;
+        border-bottom: 40px solid #ccc;
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        bottom: 62%;
+        left: 42%;
+    }
+
+    .rectangle {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        background-color: #ccc;
+        position: absolute;
+        bottom: 62%;
+        left: 42%;
+        /* display: none; */
+    }
+
+    /* .el-col .el-col-4{
+        padding: 0px 10px 10px 0px;
+    } */
+    /* .el-row{
+        min-height:580px;
+    } */
+</style>

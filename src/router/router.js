@@ -373,7 +373,7 @@ export const dynamicRouter = [
           {//文件管理
             path: routerObj.documentList.path,
             component: () => import('@/views/navigation/documentList'),
-            redirect:'/management/documentList/uploadDocumentList',
+            redirect:'/management/documentList/documentListsFenlei/image',
             meta:{pdename:routerObj.documentList.pdename},
             beforeEnter(to, from, next) {
               if(sessionStorage._firstNvb_remove == 'yes') sessionStorage.removeItem('_firstNvb')
@@ -383,11 +383,12 @@ export const dynamicRouter = [
               {
                 path:'/management/documentList/uploadDocumentList',
                 component: () => import('@/views/documentList/uploadDocumentList'),
-                meta:{boo:true,flag: routerObj.documentList.flag}
+                // meta:{boo:true,flag: routerObj.documentList.flag}
               },
               {
                 path:'/management/documentList/documentListsFenlei/:id',
-                component: () => import('@/views/documentList/documentListsFenlei')
+                component: () => import('@/views/documentList/documentListsFenlei'),
+                meta:{boo:true,flag: routerObj.documentList.flag}
               }
             ]
           },

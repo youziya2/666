@@ -18,7 +18,7 @@
                 </div>
                 <template v-if="infoList.length > 0">
                     <div class="img-list" v-for='(item,index) in infoList' :key="index">
-                        <img class="img" :src="baseUrl + item.path + randonNum" :alt="item.filename" :title="item.filename" :onerror="defaultImg"/>
+                        <img class="img" :src="baseURL + item.path" :alt="item.filename" :title="item.filename"/>
                         <div>{{item.filename}}</div>
                     </div>
                 </template>
@@ -31,13 +31,13 @@
 </template>
 <script>
 import { uploadSignImgs,getSignImgList } from "./../../api/https.js";
+import fetch from './../../api/axios'
 export default {
     data(){
         return{
             list:[],
             end: '上传签到头像',
             randonNum: 123456,
-            defaultImg: 'this.src="' + require('../../../static/img/mantoux.png') + '"',
             textPrompt:[
                 "注意：",
                 "1、每张图片均要以真实姓名命名，如张三.jpg，必须是真实姓名和jpg格式。",
@@ -47,7 +47,8 @@ export default {
             infoList: [],//头像列表对象
             imgList:{//图片列表
                 img01:{imgid:'',imgpath:''}
-            }
+            },
+            baseURL: fetch.baseURL
         }
     },
     computed:{

@@ -1870,7 +1870,6 @@ export function saveGoodsppd(obj){
 // 设置
 //获取产品属性信息
 export function getGoodsitemByCustid(obj,subatid){
-  console.log("3="+subatid)
   fetch.postAxios("/CSBaseAction.do", {
     infcMethod: 'BHGoodsServiceInfc.getGoodsitemByCustid', //接口名称(默认)
     custid: sessionStorage.userid, //购买者UUID（默认）
